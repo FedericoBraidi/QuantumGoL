@@ -4,6 +4,8 @@
 import numpy as np
 import os
 import matplotlib.pyplot as plt
+import matplotlib.animation as anim
+from matplotlib.animation import PillowWriter
 
 #####END OF IMPORTS ZONE#####
 
@@ -15,6 +17,7 @@ x_dim=10                    #num of squares in the x direction
 y_dim=10                    #num of squares in the y direction
 pattern_name="prova"        #name of the file containing the pattern w/o the extension (it should be a txt and in the patterns folder)
 evo_steps=5                 #steps of evolution to compute
+time_per_image=0.5          #time per image in the animation (in s)
 
 #####END OF PARAMETERS ZONE#####
 
@@ -91,21 +94,33 @@ for i in range(evo_steps):
                 board_new[j,k]=0
     board_evo.append(board_new)
 
+def update(step):
+    im.set_array(board_evo[step])
+    ax.set_title(f"Step number {step}")
+    return im,  # return the artists to be updated
+
+fps=int(1/time_per_image)
+fig, ax = plt.subplots()
+im = ax.matshow(board_evo[0], cmap=plt.cm.Blues, extent=(0, board_evo[0].shape[1], board_evo[0].shape[0], 0))
+ax.grid()
+ax.set_xticks(np.arange(0, x_dim, 1))
+ax.set_yticks(np.arange(0, y_dim, 1))
+ani = anim.FuncAnimation(fig, update, frames=evo_steps+1, repeat=False, interval=time_per_image*1000)
+plt.show()
+ani.save(f'pattern_{pattern_name}_evolution.gif', writer='pillow',fps=fps)
+
 for i,element in enumerate(board_evo):
     print(element)
     print("##########################")
-    colors = ['white', 'black']
 
     fig, ax = plt.subplots()
 
     plt.matshow(element, cmap=plt.cm.Blues,extent=(0, element.shape[1], element.shape[0], 0))
     plt.grid()
 
-    plt.xticks(np.arange(0, element.shape[1] + 1, 1))
-    plt.yticks(np.arange(0, element.shape[0] + 1, 1))
+    plt.xticks(np.arange(0,x_dim, 1))
+    plt.yticks(np.arange(0,y_dim, 1))
+    plt.title(f"Step number {i}")
 
-    ax.set_xticks([])
-    ax.set_yticks([])
-
-    plt.savefig(f"image{i}")
+    plt.savefig(f"Step number {i}")
 ########END OF PATTERN EVOLUTION ZONE#########
