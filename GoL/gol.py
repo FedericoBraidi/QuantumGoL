@@ -25,7 +25,7 @@ time_per_image=0.5          #time per image in the animation (in s)
 
 ########PATTERN INITIALIZATION ZONE#########
 cwd=os.getcwd()
-print(cwd)
+#print(cwd)
 file_path = os.path.join(cwd, 'patterns', f'{pattern_name}.txt')
 
 max_height=0
@@ -46,8 +46,8 @@ with open(file_path, 'r') as file:
         for j,char in enumerate(cleaned_line):
             pattern[i,j]=char
 
-print(f"Max Height: {max_height}")
-print(f"Max Width: {max_width}")
+#print(f"Max Height: {max_height}")
+#print(f"Max Width: {max_width}")
 
 if(max_height>y_dim or max_width>x_dim):
     raise(ValueError(f"The dimensions of the pattern are too big for the simulated space.\nThe dimensions of the space are:\nX:\t{x_dim}\nY:\t{y_dim}\n\nThe dimensions of the pattern are:\nX:\t{max_width}\nY:\t{max_height}"))
@@ -57,7 +57,7 @@ center_space_y=int(y_dim/2)
 center_pattern_x=int(max_width/2)
 center_pattern_y=int(max_height/2)
 
-board=np.zeros(shape=(y_dim,x_dim))
+board=np.zeros(shape=(x_dim,y_dim))
 
 start_x = center_space_x - center_pattern_x
 end_x = start_x + max_width
@@ -93,7 +93,9 @@ for i in range(evo_steps):
             elif(board_old[j,k]==1 and (count<2 or count>3)):               #alive cell
                 board_new[j,k]=0
     board_evo.append(board_new)
+########END OF PATTERN EVOLUTION ZONE#########
 
+########START OF VISUALIZATION ZONE#########
 def update(step):
     im.set_array(board_evo[step])
     ax.set_title(f"Step number {step}")
@@ -123,4 +125,4 @@ for i,element in enumerate(board_evo):
     plt.title(f"Step number {i}")
 
     plt.savefig(f"Step number {i}")
-########END OF PATTERN EVOLUTION ZONE#########
+########END OF VISUALIZATION ZONE#########
