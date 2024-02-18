@@ -120,8 +120,9 @@ def cell_evolution(board_old,j,k,count):
             G=(np.sqrt(2)+1)*(4-count)*B + (count-3)*D
         elif(count>=4):
             G=D
-        evolved_value=np.dot(G,np.array([board_old[j,k],1-board_old[j,k]]))[0]
-    return evolved_value
+        evolved_value=np.dot(G,np.array([board_old[j,k],1-board_old[j,k]]))
+        evolved_value/= np.sum(evolved_value)
+    return evolved_value[0]
 
 
 board_evo=[board]
